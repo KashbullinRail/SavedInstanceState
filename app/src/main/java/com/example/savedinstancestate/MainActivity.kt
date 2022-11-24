@@ -16,7 +16,7 @@ import kotlin.random.Random.Default.nextInt
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     lateinit var state: State
 
     override fun onCreate(savedInstanceState: Bundle?) {

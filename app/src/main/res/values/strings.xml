@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SavedInstanceState</string>
+    <string name="text">text</string>
+    <string name="icrement">Icrement</string>
+    <string name="color">Color</string>
+    <string name="visible">Visible</string>
+</resources>

@@ -1,10 +1,12 @@
 package com.example.savedinstancestate
 
 import android.graphics.Color
+import android.os.Parcelable
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.android.parcel.Parcelize
 import kotlin.random.Random
 
 class ActivityViewModel : ViewModel() {
@@ -41,10 +43,11 @@ class ActivityViewModel : ViewModel() {
         )
     }
 
+    @Parcelize
     data class State(
         var counterValue: Int,
         var textColor: Int,
         var textVisible: Boolean
-    )
+    ):Parcelable
 
 }

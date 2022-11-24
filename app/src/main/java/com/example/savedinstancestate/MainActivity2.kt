@@ -23,15 +23,13 @@ class MainActivity2 : AppCompatActivity() {
             btnSetVisible.setOnClickListener { viewModel.switchVisible() }
         }
 
-        if (viewModel.state.value == null) {
-            viewModel.initState(
-                ActivityViewModel.State(
-                    counterValue = 0,
-                    textColor = ContextCompat.getColor(this, R.color.teal_200),
-                    textVisible = true
-                )
+        viewModel.initState(
+            savedInstanceState?.getParcelable(KEY_VM) ?: ActivityViewModel.State(
+                counterValue = 0,
+                textColor = ContextCompat.getColor(this, R.color.teal_200),
+                textVisible = true
             )
-        }
+        )
 
         viewModel.state.observe(this, Observer {
             renderState(it)
@@ -39,11 +37,21 @@ class MainActivity2 : AppCompatActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY_VM, viewModel.state.value)
+    }
+
     private fun renderState(state: ActivityViewModel.State) = with(binding.tvText) {
         setText(state.counterValue.toString())
         setTextColor(state.textColor)
         visibility =
             if (state.textVisible) android.view.View.VISIBLE else android.view.View.INVISIBLE
+    }
+
+    companion object {
+        @JvmStatic
+        val KEY_VM = "KEY_VM"
     }
 
 

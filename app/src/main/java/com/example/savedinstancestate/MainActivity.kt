@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.savedinstancestate.databinding.ActivityMainBinding
@@ -27,23 +29,18 @@ class MainActivity : AppCompatActivity() {
             btnSetVisible.setOnClickListener { switchVisible() }
         }
 
-        state = if (savedInstanceState == null) {
-            State(
-                counterValue = 0,
-                textColor = ContextCompat.getColor(this, R.color.teal_200),
-                textVisible = true
-            )
-        } else {
-            savedInstanceState.getSerializable(KEY_STATE) as State
-        }
+        state = savedInstanceState?.getParcelable(KEY_STATE) ?: State(
+            counterValue = 0,
+            textColor = ContextCompat.getColor(this, R.color.teal_200),
+            textVisible = true
+        )
         renderState()
-
 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(KEY_STATE, state)
+        outState.putParcelable(KEY_STATE, state)
     }
 
     private fun increment() {
@@ -75,7 +72,34 @@ class MainActivity : AppCompatActivity() {
         var counterValue: Int,
         var textColor: Int,
         var textVisible: Boolean
-    ) : Serializable
+    ) : Parcelable {
+        constructor(parcel: Parcel) : this(
+            parcel.readInt(),
+            parcel.readInt(),
+            parcel.readByte() != 0.toByte()
+        ) {
+        }
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeInt(counterValue)
+            parcel.writeInt(textColor)
+            parcel.writeByte(if (textVisible) 1 else 0)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<State> {
+            override fun createFromParcel(parcel: Parcel): State {
+                return State(parcel)
+            }
+
+            override fun newArray(size: Int): Array<State?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 
     companion object {
         @JvmStatic

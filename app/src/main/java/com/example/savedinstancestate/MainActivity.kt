@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.savedinstancestate.databinding.ActivityMainBinding
+import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 import java.util.*
 import kotlin.random.Random.Default.nextInt
@@ -68,38 +69,12 @@ class MainActivity : AppCompatActivity() {
         visibility = if (state.textVisible) View.VISIBLE else View.INVISIBLE
     }
 
+    @Parcelize
     class State(
         var counterValue: Int,
         var textColor: Int,
         var textVisible: Boolean
-    ) : Parcelable {
-        constructor(parcel: Parcel) : this(
-            parcel.readInt(),
-            parcel.readInt(),
-            parcel.readByte() != 0.toByte()
-        ) {
-        }
-
-        override fun writeToParcel(parcel: Parcel, flags: Int) {
-            parcel.writeInt(counterValue)
-            parcel.writeInt(textColor)
-            parcel.writeByte(if (textVisible) 1 else 0)
-        }
-
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        companion object CREATOR : Parcelable.Creator<State> {
-            override fun createFromParcel(parcel: Parcel): State {
-                return State(parcel)
-            }
-
-            override fun newArray(size: Int): Array<State?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
+    ) : Parcelable
 
     companion object {
         @JvmStatic
